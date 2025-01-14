@@ -1,1 +1,95 @@
-<h1>Setting up the site...</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <title>CAN Bus Lab</title>
+</head>
+<body>
+
+<h1>CAN Bus Replay Attack Lab</h1>
+
+<div id="popup">
+    <h2>Instructions</h2>
+    <p>Welcome to the CAN Bus Replay Attack Lab! In this lab you will learn how a replay attack may be conducted on a vulnerable CAN Bus system.</p>
+    <p>Your goal is to find a command that corresponds to one of the controls on the left of the screen. To complete the lab you must:</p>
+    <ol>
+        <li>Test the different commands in Car Controls</li>
+        <li>Start a recording and record one of the commands</li>
+        <li>Playback the recording to test if the command was captured</li>
+        <li>Remove sections of the recording until you are left with only the command</li>
+    </ol>
+    <p>The CAN Bus Network is very noisy, so you may make a mistake and accidently delete the command. In this case, feel free to use the "Restore Previous Log" button.</p>
+    <p>Good luck!</p>
+    <button id="close-popup" class="pure-button pure-button-primary" onclick="closePopup()">Close</button>
+</div>
+
+<div id="big-container">
+    <div id="icon-section">
+        <h2>Car Controls</h2>
+        <div class="icon-row">
+            <div class="icon-container">
+                <object id="left-blinker" data="icons/arrow-left-icon.svg" class="blinker"></object>
+                <button id="left-blinker-button" class="button-icon pure-button" onclick="toggleIcon('left-blinker')">Left Blinker</button>
+            </div>
+            <div class="icon-container">
+                <object id="engine" data="icons/engine-motor-icon.svg" class="icon"></object>
+                <button id="engine-button" class="button-icon pure-button" onclick="toggleIcon('engine')">Engine</button>
+            </div>
+            <div class="icon-container">
+                <object id="right-blinker" data="icons/arrow-right-icon.svg" class="blinker"></object>
+                <button id="right-blinker-button" class="button-icon pure-button" onclick="toggleIcon('right-blinker')">Right Blinker</button>
+            </div>
+        </div>
+        <div class="icon-row">
+            <div class="icon-container">
+                <object id="door" data="icons/car-door-closed.svg" class="icon"></object>
+                <button id="door-button" class="button-icon pure-button" onclick="toggleIcon('door')">Door</button>
+            </div>
+            <div class="icon-container">
+                <object id="hood" data="icons/car-hood-closed.svg" class="icon"></object>
+                <button id="hood-button" class="button-icon pure-button" onclick="toggleIcon('hood')">Hood</button>
+            </div>
+            <div class="icon-container">
+                <object id="trunk" data="icons/car-trunk-closed.svg" class="trunk"></object>
+                <button id="trunk-button" class="button-icon pure-button" onclick="toggleIcon('trunk')">Trunk</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="command-container">
+        <h2>Command Log</h2>
+        <p id="command-count"></p>
+        <div id="command-log-container">
+            <div class="command-log-column">
+                <h3>Current Log</h3>
+                <div class="command-log" id="command-log"></div>
+            </div>
+            <div class="command-log-column">
+                <h3>Previous Log</h3>
+                <div class="command-log" id="command-log-saved"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="button-container">
+        <button id="record-button" class="button-player pure-button" onclick="toggleRecording()">Start Recording</button>
+        <button id="playback-button" class="button-player pure-button" onclick="togglePlayback()">Playback</button>
+    </div>
+    <form class="pure-form">
+        <label for="id-input">Command ID:</label>
+        <input type="number" id="command-input" name="command-id" value="0" min="0" step="1">
+        <button type="button" class="pure-button button-delete" onclick="deleteAbove()">Delete Above</button>
+        <button type="button" class="button-delete pure-button" onclick="deleteBelow()">Delete Below</button>
+        <button type="button" class="pure-button button-restore" onclick="restoreLog()">Restore Previous Log</button>
+    </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html> 

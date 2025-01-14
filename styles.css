@@ -1,0 +1,119 @@
+body {
+    background-color: #EEEEEE;
+    line-height: 1.4;
+    font-size: 16px;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Open Sans';
+}
+
+ol {
+    text-align: center;
+    list-style-position: inside;
+}
+
+/* Filters generated using https://codepen.io/sosuke/pen/Pjoqqp */
+
+.blinker-on {
+    filter: invert(88%) sepia(23%) saturate(7477%) hue-rotate(15deg) brightness(107%) contrast(104%); /* #EEEE00 */
+}
+
+.engine-on {
+    filter: invert(53%) sepia(80%) saturate(2398%) hue-rotate(82deg) brightness(109%) contrast(130%); /* #00EE00 */ 
+}
+
+.blinker {
+    width: 80px;
+    height: 80px;
+}
+
+.trunk {
+    width: 90px;
+    height: 90px;
+}
+
+.icon {
+    width: 100px;
+    height: 100px;
+}
+
+.icon-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+
+
+.icon-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.command-log-column {
+    height: 45vh;
+}
+
+.button-container {
+    padding: 5px;
+}
+
+.button-delete,
+.button-restore,
+.button-icon,
+.button-player {
+    border-radius: 4px;
+}
+
+.button-delete {
+    color: white;
+    background-color: rgb(202, 60, 60);
+}
+
+.button-restore {
+    background-color: rgb(220, 178, 52);
+}
+
+.button-icon {
+    color:white;
+    background-color: rgb(55, 127, 210)
+}
+
+.button-player {
+    background-color: rgb(55, 127, 210);
+    color: white;
+}
+
+#popup {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 85vw;
+    padding: 10px;
+    background-color: #00EEEE;
+}
+
+#big-container {
+    display : flex;
+}
+
+#command-container {
+    flex : 60%;
+    height: 60vh;
+}
+
+#command-log-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 60%;
+}
+
+.command-log {
+    overflow : scroll;
+    height : 90%;
+}
+
+#icon-section {
+    flex : 40%;
+}
