@@ -67,27 +67,27 @@ function sendCommand(command) {
                 break;
             case DOOR_UNLOCK:
                 state.door = true;
-                document.getElementById("door").data = "icons/car-door-icon.svg";
+                document.getElementById("door").src = "icons/car-door-icon.svg";
                 break;
             case DOOR_LOCK:
                 state.door = false;
-                document.getElementById("door").data = "icons/car-door-closed.svg";
+                document.getElementById("door").src = "icons/car-door-closed.svg";
                 break;
             case HOOD_OPEN:
                 state.hood = true;
-                document.getElementById("hood").data = "icons/car-hood-icon.svg";
+                document.getElementById("hood").src = "icons/car-hood-icon.svg";
                 break;
             case HOOD_CLOSE:
                 state.hood = false;
-                document.getElementById("hood").data = "icons/car-hood-closed.svg";
+                document.getElementById("hood").src = "icons/car-hood-closed.svg";
                 break;
             case TRUNK_OPEN:
                 state.trunk = true;
-                document.getElementById("trunk").data = "icons/car-trunk-icon.svg";
+                document.getElementById("trunk").src = "icons/car-trunk-icon.svg";
                 break;
             case TRUNK_CLOSE:
                 state.trunk = false;
-                document.getElementById("trunk").data = "icons/car-trunk-closed.svg";
+                document.getElementById("trunk").src = "icons/car-trunk-closed.svg";
                 break;
             case ENGINE_ON:
                 state.engine = true;
@@ -109,6 +109,9 @@ function sendCommand(command) {
         p_tag.classList.add("command")
         p_tag.innerHTML = command_count + ") " + command
         p_tag.identifier = "command" + command_count
+        p_tag.onclick = function() {
+            selectCommand(this);
+        }
         command_log.appendChild(p_tag)
         command_count++;    
     }
@@ -173,6 +176,7 @@ function toggleRecording() {
     } else {
         command_count = 0;
         commands_recorded = [];
+        repopulate();
         document.getElementById("record-button").innerHTML = "Stop recording"
     }
 
@@ -214,12 +218,16 @@ function deleteBelow() {
 }
 
 function save_previous() {
+    command_log_previous.innerHTML = "";
     commands_recorded.forEach((command, i) => {
         commands_recorded_saved.push(command);
         p_tag = document.createElement("p")
         p_tag.classList.add("command")
         p_tag.innerHTML = i + ") " + commands_recorded[i]
         p_tag.identifier = "command" + i
+        p_tag.onclick = function() {
+            selectCommand(p_tag);
+        }
         command_log_previous.appendChild(p_tag)
     });}
 
@@ -230,8 +238,18 @@ function repopulate() {
         p_tag.classList.add("command")
         p_tag.innerHTML = i + ") " + commands_recorded[i]
         p_tag.identifier = "command" + i
+        p_tag.onclick = function() {
+            selectCommand(p_tag);
+        }
         command_log.appendChild(p_tag)
     };
+}
+
+function selectCommand(p_tag) {
+    if (state.recording || state.playback) return;
+    idx = p_tag.innerHTML.indexOf(")") + 2;
+    command = p_tag.innerHTML.slice(idx, p_tag.innerHTML.length);
+    sendCommand(command);
 }
 
 // Main loop to send commands
