@@ -28,7 +28,8 @@ const state = {
     trunk: false,
     engine: false,
     recording: false,
-    playback: false
+    playback: false,
+    speed: 100,
 }
 
 var commands_recorded = []
@@ -185,11 +186,17 @@ function toggleRecording() {
 
 // Playback the recorded commands
 function togglePlayback() {
-    state.playback = true;
-    document.getElementById("playback-button").innerHTML = "Stop playback"
-    command_count = 0;
-    command_log.innerHTML = "";
+    if (state.playback) {
+        state.playback = false;
+        document.getElementById("playback-button").innerHTML = "Restart playback"
+    } else {
+        state.playback = true;
+        document.getElementById("playback-button").innerHTML = "Stop playback"
+        command_count = 0;
+        command_log.innerHTML = "";
+    }
 }
+
 
 function restoreLog() {
     commands_recorded = [];
@@ -219,41 +226,48 @@ function deleteBelow() {
 
 function save_previous() {
     command_log_previous.innerHTML = "";
+    commands_recorded_saved = []
     commands_recorded.forEach((command, i) => {
         commands_recorded_saved.push(command);
         p_tag = document.createElement("p")
         p_tag.classList.add("command")
-        p_tag.innerHTML = i + ") " + commands_recorded[i]
+        p_tag.innerHTML = i + ") " + command
         p_tag.identifier = "command" + i
         p_tag.onclick = function() {
             selectCommand(p_tag);
         }
         command_log_previous.appendChild(p_tag)
-    });}
+    });
+}
 
 function repopulate() {
     command_log.innerHTML = "";
-    for (i = 0; i < command_count; i++) {
+    command_count = 0;
+    commands_recorded.forEach((command, i) => {
         p_tag = document.createElement("p")
         p_tag.classList.add("command")
-        p_tag.innerHTML = i + ") " + commands_recorded[i]
+        p_tag.innerHTML = i + ") " + command
         p_tag.identifier = "command" + i
         p_tag.onclick = function() {
             selectCommand(p_tag);
         }
         command_log.appendChild(p_tag)
-    };
+        command_count++;
+    });
 }
 
 function selectCommand(p_tag) {
     if (state.recording || state.playback) return;
     idx = p_tag.innerHTML.indexOf(")") + 2;
     command = p_tag.innerHTML.slice(idx, p_tag.innerHTML.length);
+    id = p_tag.innerHTML.slice(0, idx-2);
+    document.getElementById("command-input").value = id;
     sendCommand(command);
 }
 
 // Main loop to send commands
-setInterval(() => {
+
+function commandLoopFunction() {
     if (state.recording) {
         command = createRandomCommand();
         while (STATIC_COMMANDS.includes(command)) {
@@ -269,11 +283,9 @@ setInterval(() => {
         }
     }
     document.getElementById("command-count").innerHTML = "Command count: " + command_count;
-}, 10) // 100 times per second
+}
 
-
-// Blinker animation
-setInterval(() => {
+function blinkerLoopFunction() {
     if (state.leftBlinker) {
         if (document.getElementById("left-blinker").classList.contains("blinker-on")) {
             document.getElementById("left-blinker").classList.remove("blinker-on");
@@ -289,4 +301,40 @@ setInterval(() => {
             document.getElementById("right-blinker").classList.add("blinker-on");
         }
     }
-}, 1000) // 1 time per second
+}
+
+var commandLoop = setInterval(commandLoopFunction, 10);
+var blinkerLoop = setInterval(blinkerLoopFunction, 1000);
+
+// Change the playback speed
+function changeSpeed() {
+    button = document.getElementById("playback-speed-button");
+    clearInterval(commandLoop);
+    switch (state.speed) {
+        case 100:
+            state.speed = 50;
+            button.innerHTML = "Playback Speed: 50/s"
+            break;
+        case 50:
+            state.speed = 25;
+            button.innerHTML = "Playback Speed: 25/s"
+            break;
+        case 25:
+            state.speed = 10;
+            button.innerHTML = "Playback Speed 10/s"
+            break;
+        case 10:
+            state.speed = 5;
+            button.innerHTML = "Playback Speed 5/s"
+            break;
+        case 5:
+            state.speed = 1;
+            button.innerHTML = "Playback Speed 1/s"
+            break;
+        case 1:
+            state.speed = 100;
+            button.innerHTML = "Playback Speed 100/s"
+            break;
+    }
+    commandLoop = setInterval(commandLoopFunction, 1000/state.speed);
+}
